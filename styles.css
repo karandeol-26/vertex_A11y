@@ -1,4 +1,3 @@
-/* Sleek, Apple-esque minimal UI */
 :root {
   --bg: #0b0b0c;
   --card: #121214;
@@ -24,7 +23,7 @@ body {
     sans-serif;
   min-width: 360px;
 }
-.widget{
+.widget {
   background: var(--card);
   border: 1px solid var(--edge);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
@@ -37,13 +36,12 @@ body {
   padding: 14px 16px;
   border-bottom: 1px solid var(--edge);
 }
-.badge {
+.logo {
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #222, #000);
-  box-shadow: inset 0 0 0 2px #2b2b2e;
-}
+  display: block;
+} /* <-- shows your icon */
 .app-title {
   margin: 0;
   font-size: 18px;
@@ -62,9 +60,8 @@ main {
 .primary-btn {
   width: 100%;
   padding: 14px 16px;
-  border-width: 1px;
+  border: 0;
   border-radius: 14px;
-  border-color: #fff;
   background: var(--btn);
   color: #000;
   font-weight: 600;
@@ -124,13 +121,9 @@ main {
   border-radius: 999px;
   font-weight: 700;
 }
-.badge-needs-work{
-  background: #262020;
-  color: #cb3636;
-}
 .badge-a {
-  background: rgb(36, 38, 32);
-  color: #ccf6b9;
+  background: #202226;
+  color: #fff;
 }
 .badge-aa {
   background: #1c2a1f;
@@ -188,7 +181,6 @@ main {
   margin-top: 6px;
   overflow: auto;
 }
-
 .actions {
   display: flex;
   gap: 8px;
@@ -213,4 +205,39 @@ main {
   height: 1px;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+}
+.chip {
+  border: 1px solid var(--edge);
+  background: #151517;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.chip--active {
+  outline: 2px solid #2a2a2e;
+}
+.chip-count {
+  margin-left: 6px;
+  color: var(--muted);
+}
+
+.preview {
+  margin-top: 8px;
+  border: 1px solid var(--edge);
+  border-radius: 10px;
+  background: #0a0a0c;
+  padding: 6px;
+}
+.preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
 }
