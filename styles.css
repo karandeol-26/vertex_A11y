@@ -255,7 +255,7 @@ main {
 
 #help-prompt{
   display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 5px;
   position: relative;
 }
@@ -263,8 +263,7 @@ main {
 #help-text {
   position: absolute;
   z-index: 1;
-  top: 40px;
-  right: -9px;
+  bottom: 50px;
   visibility: hidden;
   display: none;
 }
