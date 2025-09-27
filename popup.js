@@ -37,7 +37,7 @@ sortSelect.addEventListener("change", () => {
 function severityRank(s){ return s==="high"?3:s==="medium"?2:1; }
 
 function renderScore(r){
-  const tier = r.score >= 90 ? "AAA" : r.score >= 50 ? "AA" : r.score >= 30 ? "A" : "Needs Work";
+  const tier = r.score >= 95 ? "AAA" : r.score >= 85 ? "AA" : r.score >= 70 ? "A" : "Needs Work";
   const badgeClass = r.score >= 90 ? "badge-aaa" : r.score >= 50 ? "badge-aa" : "badge-a";
   scoreCard.classList.remove("hidden");
   scoreCard.innerHTML = `
