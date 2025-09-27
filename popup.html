@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vertex A11y</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="badge"></div>
+    <div>
+      <h1 class="app-title">Vertex</h1>
+      <p class="subtitle">Accessibility Checker</p>
+    </div>
+  </header>
+
+  <main>
+    <button id="scanBtn" class="primary-btn" aria-label="Scan this page">
+      <span class="play">▶</span> Scan this Page
+    </button>
+
+    <section id="scoreCard" class="card hidden" aria-live="polite"></section>
+
+    <section id="issuesSection" class="card hidden">
+      <div class="toolbar">
+        <label for="sortSelect" class="sr-only">Sort by</label>
+        <select id="sortSelect" class="select">
+          <option value="type">Type</option>
+          <option value="severity">Severity</option>
+          <option value="fixable">Fixable</option>
+        </select>
+        <span class="muted" id="issueCount"></span>
+      </div>
+      <div id="issuesList" class="issues-list"></div>
+    </section>
+
+    <details class="card" style="margin-top:12px;">
+      <summary>What’s this?</summary>
+      <p>Vertex A11y scans this page for: missing alt text, color contrast, keyboard access, semantic HTML, form labels, media captions, and zoom support. It estimates a compliance score and shows quick fixes.</p>
+    </details>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
