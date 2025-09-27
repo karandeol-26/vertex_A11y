@@ -85,22 +85,6 @@ Unlike existing accessibility tools, Vertex A11y focuses on:
 | | **Cost savings** | Earlier detection means cheaper fixes compared to post-deployment remediation |
 | | **Broader reach** | Accessible websites serve larger audiences and improve SEO |
 
-## Getting Started
-
-1. **Install the Extension**
-   - Download from the Chrome Web Store (coming soon)
-   - Or load unpacked from this repository for development
-
-2. **Scan Any Website**
-   - Navigate to any webpage
-   - Click the Vertex A11y icon in your browser toolbar
-   - Click "Scan this Page"
-
-3. **Review and Fix Issues**
-   - Review the compliance score and issue breakdown
-   - Click "Reveal on page" to highlight problematic elements
-   - Copy the provided code fixes and apply them to your project
-
 ## Development
 
 ```bash
