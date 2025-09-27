@@ -41,7 +41,7 @@ body {
   height: 28px;
   border-radius: 8px;
   display: block;
-} /* <-- shows your icon */
+} 
 .app-title {
   margin: 0;
   font-size: 18px;
@@ -121,9 +121,13 @@ main {
   border-radius: 999px;
   font-weight: 700;
 }
+.badge-needs-work{
+  background: #262020;
+  color: var(--bad);
+}
 .badge-a {
-  background: #202226;
-  color: #fff;
+  background: #262420;
+  color: var(--warn);
 }
 .badge-aa {
   background: #1c2a1f;
