@@ -19,9 +19,12 @@
 
     <main>
       <!-- Scan button -->
-      <button id="scanBtn" class="primary-btn" aria-label="Scan this page">
-        <span class="play">▶</span> Scan this Page
-      </button>
+      <div class="button-group">
+        <button id="scanBtn" class="primary-btn" aria-label="Scan this page">
+          <span class="play">▶</span> Scan this Page
+        </button>
+        <div class="border-background" style="filter: blur(${filter}px)"></div>
+      </div>
 
       <!-- Score card -->
       <section id="scoreCard" class="card hidden" aria-live="polite"></section>
@@ -50,7 +53,7 @@
               <option value="type">Type</option>
               <option value="severity">Severity</option>
             </select>
-            <span class="muted" id="issueCount"></span>
+            <span class="muted" id="issueCount"></span><span> issues</span>
           </div>
         </div>
 
@@ -58,32 +61,33 @@
       </section>
 
       <!-- Help -->
-      <div id="help-prompt" class="card">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-          <path d="M12 17h.01"></path>
-        </svg>
-        What's this?
-        <span id="help-text" class="card">
-          Vertex A11y scans the current page for common accessibility issues
-          (alt text, contrast, keyboard access, structure, labels, captions,
-          zoom, etc.) and estimates a compliance score with quick fix tips.
-        </span>
+      <div id="help-group" class="card">
+        <div id="help-prompt">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <path d="M12 17h.01"></path>
+          </svg>
+          What's this?
+        </div>
+        <div id="help-text" class="card">
+          Vertex A11y scans the current page for common accessibility issues and
+          estimates a compliance score with quick fix tips.
+        </div>
       </div>
     </main>
 
-    <script src="popup.js"></script>
+    <script src="popup.bundle.js"></script>
     <script src="animations.bundle.js"></script>
   </body>
 </html>

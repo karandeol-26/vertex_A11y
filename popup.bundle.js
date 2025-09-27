@@ -2717,11 +2717,6 @@
     return type && typeof value === "number" ? type.transform(value) : value;
   };
 
-  // node_modules/motion-dom/dist/es/utils/is-html-element.mjs
-  function isHTMLElement(element) {
-    return isObject(element) && "offsetHeight" in element;
-  }
-
   // node_modules/motion-dom/dist/es/value/index.mjs
   var MAX_VELOCITY_DELTA = 30;
   var isFloat = (value) => {
@@ -3009,167 +3004,6 @@
 
   // node_modules/motion-dom/dist/es/frameloop/microtask.mjs
   var { schedule: microtask, cancel: cancelMicrotask } = /* @__PURE__ */ createRenderBatcher(queueMicrotask, false);
-
-  // node_modules/motion-dom/dist/es/gestures/drag/state/is-active.mjs
-  var isDragging = {
-    x: false,
-    y: false
-  };
-  function isDragActive() {
-    return isDragging.x || isDragging.y;
-  }
-
-  // node_modules/motion-dom/dist/es/gestures/utils/setup.mjs
-  function setupGesture(elementOrSelector, options) {
-    const elements = resolveElements(elementOrSelector);
-    const gestureAbortController = new AbortController();
-    const eventOptions = {
-      passive: true,
-      ...options,
-      signal: gestureAbortController.signal
-    };
-    const cancel = () => gestureAbortController.abort();
-    return [elements, eventOptions, cancel];
-  }
-
-  // node_modules/motion-dom/dist/es/gestures/hover.mjs
-  function isValidHover(event) {
-    return !(event.pointerType === "touch" || isDragActive());
-  }
-  function hover(elementOrSelector, onHoverStart, options = {}) {
-    const [elements, eventOptions, cancel] = setupGesture(elementOrSelector, options);
-    const onPointerEnter = (enterEvent) => {
-      if (!isValidHover(enterEvent))
-        return;
-      const { target } = enterEvent;
-      const onHoverEnd = onHoverStart(target, enterEvent);
-      if (typeof onHoverEnd !== "function" || !target)
-        return;
-      const onPointerLeave = (leaveEvent) => {
-        if (!isValidHover(leaveEvent))
-          return;
-        onHoverEnd(leaveEvent);
-        target.removeEventListener("pointerleave", onPointerLeave);
-      };
-      target.addEventListener("pointerleave", onPointerLeave, eventOptions);
-    };
-    elements.forEach((element) => {
-      element.addEventListener("pointerenter", onPointerEnter, eventOptions);
-    });
-    return cancel;
-  }
-
-  // node_modules/motion-dom/dist/es/gestures/utils/is-node-or-child.mjs
-  var isNodeOrChild = (parent, child) => {
-    if (!child) {
-      return false;
-    } else if (parent === child) {
-      return true;
-    } else {
-      return isNodeOrChild(parent, child.parentElement);
-    }
-  };
-
-  // node_modules/motion-dom/dist/es/gestures/utils/is-primary-pointer.mjs
-  var isPrimaryPointer = (event) => {
-    if (event.pointerType === "mouse") {
-      return typeof event.button !== "number" || event.button <= 0;
-    } else {
-      return event.isPrimary !== false;
-    }
-  };
-
-  // node_modules/motion-dom/dist/es/gestures/press/utils/is-keyboard-accessible.mjs
-  var focusableElements = /* @__PURE__ */ new Set([
-    "BUTTON",
-    "INPUT",
-    "SELECT",
-    "TEXTAREA",
-    "A"
-  ]);
-  function isElementKeyboardAccessible(element) {
-    return focusableElements.has(element.tagName) || element.tabIndex !== -1;
-  }
-
-  // node_modules/motion-dom/dist/es/gestures/press/utils/state.mjs
-  var isPressing = /* @__PURE__ */ new WeakSet();
-
-  // node_modules/motion-dom/dist/es/gestures/press/utils/keyboard.mjs
-  function filterEvents(callback) {
-    return (event) => {
-      if (event.key !== "Enter")
-        return;
-      callback(event);
-    };
-  }
-  function firePointerEvent(target, type) {
-    target.dispatchEvent(new PointerEvent("pointer" + type, { isPrimary: true, bubbles: true }));
-  }
-  var enableKeyboardPress = (focusEvent, eventOptions) => {
-    const element = focusEvent.currentTarget;
-    if (!element)
-      return;
-    const handleKeydown = filterEvents(() => {
-      if (isPressing.has(element))
-        return;
-      firePointerEvent(element, "down");
-      const handleKeyup = filterEvents(() => {
-        firePointerEvent(element, "up");
-      });
-      const handleBlur = () => firePointerEvent(element, "cancel");
-      element.addEventListener("keyup", handleKeyup, eventOptions);
-      element.addEventListener("blur", handleBlur, eventOptions);
-    });
-    element.addEventListener("keydown", handleKeydown, eventOptions);
-    element.addEventListener("blur", () => element.removeEventListener("keydown", handleKeydown), eventOptions);
-  };
-
-  // node_modules/motion-dom/dist/es/gestures/press/index.mjs
-  function isValidPressEvent(event) {
-    return isPrimaryPointer(event) && !isDragActive();
-  }
-  function press(targetOrSelector, onPressStart, options = {}) {
-    const [targets, eventOptions, cancelEvents] = setupGesture(targetOrSelector, options);
-    const startPress = (startEvent) => {
-      const target = startEvent.currentTarget;
-      if (!isValidPressEvent(startEvent))
-        return;
-      isPressing.add(target);
-      const onPressEnd = onPressStart(target, startEvent);
-      const onPointerEnd = (endEvent, success) => {
-        window.removeEventListener("pointerup", onPointerUp);
-        window.removeEventListener("pointercancel", onPointerCancel);
-        if (isPressing.has(target)) {
-          isPressing.delete(target);
-        }
-        if (!isValidPressEvent(endEvent)) {
-          return;
-        }
-        if (typeof onPressEnd === "function") {
-          onPressEnd(endEvent, { success });
-        }
-      };
-      const onPointerUp = (upEvent) => {
-        onPointerEnd(upEvent, target === window || target === document || options.useGlobalTarget || isNodeOrChild(target, upEvent.target));
-      };
-      const onPointerCancel = (cancelEvent) => {
-        onPointerEnd(cancelEvent, false);
-      };
-      window.addEventListener("pointerup", onPointerUp, eventOptions);
-      window.addEventListener("pointercancel", onPointerCancel, eventOptions);
-    };
-    targets.forEach((target) => {
-      const pointerDownTarget = options.useGlobalTarget ? window : target;
-      pointerDownTarget.addEventListener("pointerdown", startPress, eventOptions);
-      if (isHTMLElement(target)) {
-        target.addEventListener("focus", (event) => enableKeyboardPress(event, eventOptions));
-        if (!isElementKeyboardAccessible(target) && !target.hasAttribute("tabindex")) {
-          target.tabIndex = 0;
-        }
-      }
-    });
-    return cancelEvents;
-  }
 
   // node_modules/motion-dom/dist/es/utils/is-svg-element.mjs
   function isSVGElement(element) {
@@ -4644,85 +4478,206 @@
   }
   var animate = createScopedAnimate();
 
-  // animations.js
+  // popup.js
   var scanBtn = document.getElementById("scanBtn");
-  var filter2 = 0;
-  hover(scanBtn, (element) => {
-    animate(element, {
-      scale: 1.05,
-      backgroundColor: "#000",
-      color: "#fff",
-      ease: easeOut
-    });
-    animate(".border-background", {
-      scale: 1.05,
-      inset: "-3px",
-      ease: easeOut
-    });
-    animate(0, 10, {
-      duration: 0.2,
-      onUpdate: (latest) => {
-        filter2 = Math.round(latest);
-        document.querySelector(
-          ".border-background"
-        ).style.filter = `blur(${filter2}px)`;
+  var scoreCard = document.getElementById("scoreCard");
+  var issuesSection = document.getElementById("issuesSection");
+  var issuesList = document.getElementById("issuesList");
+  var issueCount = document.getElementById("issueCount");
+  var sortSelect = document.getElementById("sortSelect");
+  var filterAllBtn = document.getElementById("filterAll");
+  var filterFixableBtn = document.getElementById("filterFixable");
+  var fixableCount = document.getElementById("fixableCount");
+  var report = null;
+  var lastReport = null;
+  var filterMode = "all";
+  scanBtn.addEventListener("click", runScan);
+  async function runScan() {
+    scanBtn.disabled = true;
+    scanBtn.textContent = "Scanning\u2026";
+    try {
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
+      });
+      if (!tab?.id) throw new Error("No active tab.");
+      if (!/^https?:\/\//i.test(tab.url || "")) {
+        throw new Error(
+          "This page type blocks extensions. Open a normal http(s) website and try again."
+        );
       }
-    });
-    return () => {
-      animate(element, {
-        scale: 1,
-        backgroundColor: "#fff",
-        color: "#000",
-        duration: 0.2
+      try {
+        report = await chrome.tabs.sendMessage(tab.id, { type: "VERTEX_SCAN" });
+        if (!report || report.error)
+          throw new Error(report?.error || "Scan failed.");
+      } catch {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ["content.js"]
+        });
+        report = await chrome.tabs.sendMessage(tab.id, { type: "VERTEX_SCAN" });
+        if (!report || report.error)
+          throw new Error(report?.error || "Scan failed after injection.");
+      }
+      lastReport = report;
+      renderScore(report);
+      updateFixableCount(report.issues);
+      renderIssues(applyFiltersAndSort(report.issues));
+      animate(0, report.issues.length, {
+        duration: 1,
+        onUpdate: (latest) => issueCount.textContent = Math.round(latest)
       });
-      animate(".border-background", {
-        scale: 1,
-        inset: "0px",
-        duration: 0.2
+    } catch (e) {
+      renderError(e);
+    } finally {
+      scanBtn.disabled = false;
+      scanBtn.innerHTML = `<span class="play">\u25B6</span> Scan this Page`;
+    }
+  }
+  filterAllBtn?.addEventListener("click", () => setFilter("all"));
+  filterFixableBtn?.addEventListener("click", () => setFilter("fixable"));
+  function setFilter(mode) {
+    filterMode = mode;
+    filterAllBtn.classList.toggle("chip--active", mode === "all");
+    filterAllBtn.setAttribute("aria-pressed", mode === "all");
+    filterFixableBtn.classList.toggle("chip--active", mode === "fixable");
+    filterFixableBtn.setAttribute("aria-pressed", mode === "fixable");
+    if (lastReport) renderIssues(applyFiltersAndSort(lastReport.issues));
+  }
+  function updateFixableCount(items) {
+    const n = items.filter((i) => i.fixable).length;
+    if (fixableCount) {
+      fixableCount.textContent = n;
+      const score = document.getElementById("score-num");
+      animate(0, n, {
+        duration: 1,
+        onUpdate: (latest) => fixableCount.textContent = Math.round(latest)
       });
-      animate(10, 0, {
-        duration: 0.2,
-        onUpdate: (latest) => {
-          filter2 = Math.round(latest);
-          document.querySelector(
-            ".border-background"
-          ).style.filter = `blur(${filter2}px)`;
-        }
-      });
-    };
+    }
+  }
+  function applyFiltersAndSort(items) {
+    let arr = [...items];
+    if (filterMode === "fixable") arr = arr.filter((i) => i.fixable);
+    const by = sortSelect?.value || "type";
+    if (by === "type")
+      arr.sort((a, b) => (a.type || "").localeCompare(b.type || ""));
+    if (by === "severity")
+      arr.sort((a, b) => severityRank(b.severity) - severityRank(a.severity));
+    return arr;
+  }
+  sortSelect?.addEventListener("change", () => {
+    if (!lastReport) return;
+    renderIssues(applyFiltersAndSort(lastReport.issues));
   });
-  press(scanBtn, (element) => {
-    animate(element, {
-      scale: 0.9,
-      backgroundColor: "#fff",
-      color: "#000"
-    });
-    animate(".border-background", {
-      scale: 0.9
-    });
-    return () => {
-      animate(element, {
-        scale: 1.05,
-        backgroundColor: "#000",
-        color: "#fff"
+  function severityRank(s) {
+    return s === "high" ? 3 : s === "medium" ? 2 : 1;
+  }
+  issuesList.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-action='reveal']");
+    if (!btn) return;
+    const path = btn.getAttribute("data-path") || null;
+    try {
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
       });
-      animate(".border-background", {
-        scale: 1.05
-      });
-    };
+      if (!tab?.id) throw new Error("No active tab.");
+      if (!/^https?:\/\//i.test(tab.url || ""))
+        throw new Error("Action blocked on this page.");
+      await chrome.tabs.sendMessage(tab.id, { type: "VERTEX_HIGHLIGHT", path });
+    } catch (err) {
+      renderError(err);
+    }
   });
-  var helpGroup = document.getElementById("help-group");
-  var helpPrompt = document.getElementById("help-prompt");
-  var helpText = document.getElementById("help-text");
-  var mouseOffSeq = [
-    [][helpGroup, { scaleY: 1, fontSize: "18px", duration: 0.5 }]
-  ];
-  hover(helpGroup, (helpPrompt2) => {
-    animate(helpPrompt2, { color: "#676767ff" }, { duration: 0.2 });
-    animate(helpText, { opacity: 1, duration: 0.2 });
-    return () => {
-      animate(helpPrompt2, { color: "#FFF" }, { duration: 0.2 });
-      animate(helpText, { opacity: 0, duration: 0.4, ease: easeIn });
-    };
-  });
+  function renderScore(r) {
+    const tier = r.score >= 95 ? "AAA" : r.score >= 85 ? "AA" : r.score >= 70 ? "A" : "Needs Work";
+    const badgeClass = r.score >= 95 ? "badge-aaa" : r.score >= 85 ? "badge-aa" : r.score >= 70 ? "badge-a" : "badge-needs-work";
+    scoreCard.classList.remove("hidden");
+    scoreCard.innerHTML = `
+    <div class="score">
+      <div>
+        <div id="score"><span id="score-num">${Math.round(
+      r.score
+    )}</span><span>%</span></div>
+        <div class="muted">Estimated compliance</div>
+      </div>
+      <div class="badge-tier ${badgeClass}" aria-label="Tier">${tier}</div>
+    </div>
+    <div class="muted" style="margin-top:6px">
+      <span id="passed-num"> ${r.passed} </span>
+      <span>/${r.checked} checks passed</span>
+    </div>`;
+    issuesSection.classList.remove("hidden");
+    const score = document.getElementById("score-num");
+    animate(0, r.score, {
+      duration: 1,
+      onUpdate: (latest) => score.innerHTML = Math.round(latest)
+    });
+    const passedNum = document.getElementById("passed-num");
+    animate(0, r.passed, {
+      duration: 1,
+      onUpdate: (latest) => passedNum.innerHTML = Math.round(latest)
+    });
+  }
+  function renderIssues(items) {
+    issuesList.innerHTML = "";
+    issueCount.textContent = `${items.length}`;
+    for (const it of items) {
+      const el = document.createElement("div");
+      el.className = "issue";
+      let previewHTML = "";
+      if ((it.type || "").toLowerCase() === "images") {
+        const src = extractSrc(it.snippet) || extractSrc(it.tip);
+        if (src)
+          previewHTML = `<div class="preview"><img src="${escapeAttr(
+            src
+          )}" alt=""></div>`;
+      }
+      el.innerHTML = `
+      <div class="head">
+        <div class="type">${escapeHTML(it.type || "Issue")}</div>
+        <div class="sev ${escapeHTML(it.severity || "low")}">${escapeHTML(
+        it.severity || "low"
+      )}</div>
+      </div>
+      <div class="muted" style="margin-top:4px">${escapeHTML(
+        it.message || ""
+      )}</div>
+      ${it.snippet ? `<pre class="code">${escapeHTML(it.snippet)}</pre>` : ""}
+      ${it.tip ? `<div style="margin-top:6px">\u{1F4A1} <strong>Fix:</strong> ${escapeHTML(
+        it.tip
+      )}</div>` : ""}
+      ${previewHTML}
+      <div class="actions">
+        <button class="btn" data-action="reveal" data-path="${escapeAttr(
+        it.path || ""
+      )}">Reveal on page</button>
+      </div>
+    `;
+      issuesList.appendChild(el);
+    }
+  }
+  function renderError(err) {
+    scoreCard.classList.remove("hidden");
+    scoreCard.innerHTML = `
+    <div style="color:#ff7675;font-weight:700">Error</div>
+    <div class="muted">${escapeHTML(
+      err?.message || "Something went wrong."
+    )}</div>
+  `;
+  }
+  function escapeHTML(s) {
+    return String(s).replace(
+      /[&<>"']/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
+    );
+  }
+  function escapeAttr(s) {
+    return String(s).replace(/"/g, "&quot;");
+  }
+  function extractSrc(str) {
+    if (!str) return null;
+    const m = String(str).match(/src\s*=\s*"([^"]+)"/i) || String(str).match(/src\s*=\s*'([^']+)'/i);
+    return m ? m[1] : null;
+  }
 })();

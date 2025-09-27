@@ -1,4 +1,4 @@
-// popup.js
+import { animate } from "motion";
 
 const scanBtn = document.getElementById("scanBtn");
 const scoreCard = document.getElementById("scoreCard");
@@ -10,6 +10,7 @@ const filterAllBtn = document.getElementById("filterAll");
 const filterFixableBtn = document.getElementById("filterFixable");
 const fixableCount = document.getElementById("fixableCount");
 
+let report = null;
 let lastReport = null;
 let filterMode = "all"; // "all" | "fixable"
 
@@ -30,7 +31,6 @@ async function runScan() {
       );
     }
 
-    let report;
     try {
       report = await chrome.tabs.sendMessage(tab.id, { type: "VERTEX_SCAN" });
       if (!report || report.error)
@@ -50,6 +50,12 @@ async function runScan() {
     renderScore(report);
     updateFixableCount(report.issues);
     renderIssues(applyFiltersAndSort(report.issues));
+
+    animate(0, report.issues.length, {
+      duration: 1,
+      onUpdate: (latest) => (issueCount.textContent = Math.round(latest)),
+    });
+
   } catch (e) {
     renderError(e);
   } finally {
@@ -73,7 +79,16 @@ function setFilter(mode) {
 
 function updateFixableCount(items) {
   const n = items.filter((i) => i.fixable).length;
-  if (fixableCount) fixableCount.textContent = n;
+  if (fixableCount) {
+    fixableCount.textContent = n;
+
+    const score = document.getElementById("score-num");
+
+    animate(0, n, {
+      duration: 1,
+      onUpdate: (latest) => (fixableCount.textContent = Math.round(latest)),
+    });
+  }
 }
 
 function applyFiltersAndSort(items) {
@@ -141,25 +156,37 @@ function renderScore(r) {
   scoreCard.innerHTML = `
     <div class="score">
       <div>
-        <div id="score">${Math.round(
+        <div id="score"><span id="score-num">${Math.round(
           r.score
-        )}<span>%</span></div>
+        )}</span><span>%</span></div>
         <div class="muted">Estimated compliance</div>
       </div>
       <div class="badge-tier ${badgeClass}" aria-label="Tier">${tier}</div>
     </div>
-    <div class="muted" style="margin-top:6px">${r.passed}/${
-    r.checked
-  } checks passed</div>
-  `;
+    <div class="muted" style="margin-top:6px">
+      <span id="passed-num"> ${r.passed} </span>
+      <span>/${r.checked} checks passed</span>
+    </div>`;
   issuesSection.classList.remove("hidden");
+
+  const score = document.getElementById("score-num");
+
+  animate(0, r.score, {
+    duration: 1,
+    onUpdate: (latest) => (score.innerHTML = Math.round(latest)),
+  });
+
+  const passedNum = document.getElementById("passed-num");
+
+  animate(0, r.passed, {
+    duration: 1,
+    onUpdate: (latest) => (passedNum.innerHTML = Math.round(latest)),
+  });
 }
 
 function renderIssues(items) {
   issuesList.innerHTML = "";
-  issueCount.textContent = `${items.length} issue${
-    items.length !== 1 ? "s" : ""
-  }`;
+  issueCount.textContent = `${items.length}`;
 
   for (const it of items) {
     const el = document.createElement("div");

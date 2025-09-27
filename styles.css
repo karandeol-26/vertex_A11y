@@ -3,7 +3,7 @@
   --card: #121214;
   --muted: #a1a1aa;
   --text: #fafafa;
-  --edge: #35353b;
+  --edge: #252525;
   --btn: #f5f5f7;
   --ok: #2ecc71;
   --warn: #f39c12;
@@ -57,26 +57,6 @@ body {
 
 main {
   padding: 14px;
-}
-.primary-btn {
-  width: 100%;
-  padding: 14px 16px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--btn);
-  color: #000;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
-    0 6px 18px rgba(0, 0, 0, 0.4);
-}
-.primary-btn:active {
-  transform: translateY(1px);
 }
 .play {
   font-weight: 900;
@@ -253,22 +233,56 @@ main {
   font-weight: 800;
 }
 
-#help-prompt{
-  display: flex;
-  justify-content: center;
+#help-group{
   gap: 5px;
   position: relative;
 }
 
+#help-prompt{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
 #help-text {
+  color: #FFF;
   position: absolute;
   z-index: 1;
   bottom: 50px;
-  visibility: hidden;
-  display: none;
+  right: 20px;
+  pointer-events: none;
+  opacity: 0; 
 }
 
-#help-prompt:hover #help-text{
-  visibility: visible;
-  display: inline-block;
+.primary-btn {
+  width: 100%;
+  padding: 16px 16px;
+  border: 0;
+  border-radius: 15px;
+  background: var(--btn);
+  color: #000;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 10;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.button-group{
+  position: relative;
+}
+
+.border-background{
+  position: absolute;
+  inset: 0px;
+  border-radius: 15px;
+  background: conic-gradient(red, orange, yellow, green, blue, purple);
+  pointer-events: none;
 }
