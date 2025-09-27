@@ -25,15 +25,11 @@ body {
   min-width: 360px;
 }
 .widget{
-  .widget {
   background: var(--card);
   border: 1px solid var(--edge);
-  border-radius: 20px; /* 👈 roundness here */
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
-  overflow: hidden; /* ensures children respect rounded corners */
 }
 
-}
 .app-header {
   display: flex;
   gap: 10px;
@@ -66,8 +62,9 @@ main {
 .primary-btn {
   width: 100%;
   padding: 14px 16px;
-  border: 0;
+  border-width: 1px;
   border-radius: 14px;
+  border-color: #fff;
   background: var(--btn);
   color: #000;
   font-weight: 600;
@@ -127,9 +124,13 @@ main {
   border-radius: 999px;
   font-weight: 700;
 }
+.badge-needs-work{
+  background: #262020;
+  color: #cb3636;
+}
 .badge-a {
-  background: #202226;
-  color: #fff;
+  background: rgb(36, 38, 32);
+  color: #ccf6b9;
 }
 .badge-aa {
   background: #1c2a1f;
