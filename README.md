@@ -71,22 +71,19 @@ Unlike existing accessibility tools, Vertex A11y focuses on:
 - **Color contrast algorithms** - Proper luminance calculations following WCAG standards
 - **Semantic HTML validation** - Checks for proper landmark usage and heading structure
 
-## Impact
+## 🌍 Impact
 
-### For Developers
-- **Faster iteration** - Catch accessibility issues during development, not after deployment
-- **Lower learning curve** - Provides specific solutions rather than requiring deep accessibility expertise
-- **Better code quality** - Encourages accessible-first development practices
-
-### For Users with Disabilities
-- **Improved web experience** - Helps create websites that work for screen readers, keyboard navigation, and assistive technologies
-- **Better compliance** - Supports developers in meeting ADA and Section 508 requirements
-- **Inclusive design** - Promotes universal design principles that benefit all users
-
-### For Organizations
-- **Reduced legal risk** - Proactive accessibility compliance helps avoid ADA lawsuits
-- **Cost savings** - Earlier detection means cheaper fixes compared to post-deployment remediation
-- **Broader reach** - Accessible websites serve larger audiences and improve SEO
+| Stakeholder | Benefit | Description |
+|-------------|---------|-------------|
+| **👩‍💻 Developers** | **Faster iteration** | Catch accessibility issues during development, not after deployment |
+| | **Lower learning curve** | Provides specific solutions rather than requiring deep accessibility expertise |
+| | **Better code quality** | Encourages accessible-first development practices |
+| **♿ Users with Disabilities** | **Improved web experience** | Helps create websites that work for screen readers, keyboard navigation, and assistive technologies |
+| | **Better compliance** | Supports developers in meeting ADA and Section 508 requirements |
+| | **Inclusive design** | Promotes universal design principles that benefit all users |
+| **🏢 Organizations** | **Reduced legal risk** | Proactive accessibility compliance helps avoid ADA lawsuits |
+| | **Cost savings** | Earlier detection means cheaper fixes compared to post-deployment remediation |
+| | **Broader reach** | Accessible websites serve larger audiences and improve SEO |
 
 ## Getting Started
 
