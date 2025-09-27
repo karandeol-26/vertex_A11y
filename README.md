@@ -110,10 +110,6 @@ Unlike existing accessibility tools, Vertex A11y focuses on:
 # Install dependencies
 npm install
 
-# Build bundled files
-npx esbuild popup.js --bundle --outfile=popup.bundle.js
-npx esbuild animations.js --bundle --outfile=animations.bundle.js
-
 # Load extension in Chrome
 # 1. Open chrome://extensions/
 # 2. Enable "Developer mode"
