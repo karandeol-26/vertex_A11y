@@ -12,6 +12,7 @@
 
 * {
   box-sizing: border-box;
+  scrollbar-width: none;
 }
 
 body {
@@ -145,6 +146,7 @@ main {
   gap: 10px;
   max-height: 420px;
   overflow: auto;
+  scrollbar-width: none;
 }
 .issue {
   border: 1px solid var(--edge);
@@ -183,7 +185,7 @@ main {
   border-radius: 8px;
   padding: 6px;
   margin-top: 6px;
-  overflow: auto;
+  overflow: hidden;
 }
 .actions {
   display: flex;
