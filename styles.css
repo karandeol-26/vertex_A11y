@@ -3,7 +3,7 @@
   --card: #121214;
   --muted: #a1a1aa;
   --text: #fafafa;
-  --edge: #1f1f22;
+  --edge: #35353b;
   --btn: #f5f5f7;
   --ok: #2ecc71;
   --warn: #f39c12;
@@ -42,7 +42,7 @@ body {
   height: 28px;
   border-radius: 8px;
   display: block;
-} 
+}
 .app-title {
   margin: 0;
   font-size: 18px;
@@ -122,7 +122,7 @@ main {
   border-radius: 999px;
   font-weight: 700;
 }
-.badge-needs-work{
+.badge-needs-work {
   background: #262020;
   color: var(--bad);
 }
@@ -246,4 +246,30 @@ main {
   height: auto;
   border-radius: 8px;
   display: block;
+}
+
+#score {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+#help-prompt{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+}
+
+#help-text {
+  position: absolute;
+  z-index: 1;
+  top: 40px;
+  right: -9px;
+  visibility: hidden;
+  display: none;
+}
+
+#help-prompt:hover #help-text{
+  visibility: visible;
+  display: inline-block;
 }

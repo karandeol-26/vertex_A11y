@@ -1,64 +1,89 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vertex A11y</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <div className="widget"></div>
-  <!-- Header with logo -->
-  <header class="app-header">
-    <img src="icons/icon32.png" class="logo" alt="" />
-    <div>
-      <h1 class="app-title">Vertex</h1>
-      <p class="subtitle">Accessibility Checker</p>
-    </div>
-  </header>
-
-  <main>
-    <!-- Scan button -->
-    <button id="scanBtn" class="primary-btn" aria-label="Scan this page">
-      <span class="play">▶</span> Scan this Page
-    </button>
-
-    <!-- Score card -->
-    <section id="scoreCard" class="card hidden" aria-live="polite"></section>
-
-    <!-- Issues -->
-    <section id="issuesSection" class="card hidden">
-      <div class="toolbar">
-        <!-- Filter chips -->
-        <div class="chips">
-          <button id="filterAll" class="chip chip--active" aria-pressed="true">All</button>
-          <button id="filterFixable" class="chip" aria-pressed="false">
-            Fixable <span id="fixableCount" class="chip-count">0</span>
-          </button>
-        </div>
-
-        <!-- Sort + count (Fixable removed) -->
-        <div>
-          <label for="sortSelect" class="sr-only">Sort by</label>
-          <select id="sortSelect" class="select">
-            <option value="type">Type</option>
-            <option value="severity">Severity</option>
-          </select>
-          <span class="muted" id="issueCount"></span>
-        </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vertex A11y</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div className="widget"></div>
+    <!-- Header with logo -->
+    <header class="app-header">
+      <img src="icons/icon32.png" class="logo" alt="" />
+      <div>
+        <h1 class="app-title">Vertex</h1>
+        <p class="subtitle">Accessibility Checker</p>
       </div>
+    </header>
 
-      <div id="issuesList" class="issues-list"></div>
-    </section>
+    <main>
+      <!-- Scan button -->
+      <button id="scanBtn" class="primary-btn" aria-label="Scan this page">
+        <span class="play">▶</span> Scan this Page
+      </button>
 
-    <!-- Help -->
-    <details class="card" style="margin-top:12px;">
-      <summary>What’s this?</summary>
-      <p>Vertex A11y scans the current page for common accessibility issues (alt text, contrast, keyboard access, structure, labels, captions, zoom, etc.) and estimates a compliance score with quick fix tips.</p>
-    </details>
-  </main>
+      <!-- Score card -->
+      <section id="scoreCard" class="card hidden" aria-live="polite"></section>
 
-  <script src="popup.js"></script>
-  <script src="animations.bundle.js"></script>
-</body>
+      <!-- Issues -->
+      <section id="issuesSection" class="card hidden">
+        <div class="toolbar">
+          <!-- Filter chips -->
+          <div class="chips">
+            <button
+              id="filterAll"
+              class="chip chip--active"
+              aria-pressed="true"
+            >
+              All
+            </button>
+            <button id="filterFixable" class="chip" aria-pressed="false">
+              Fixable <span id="fixableCount" class="chip-count">0</span>
+            </button>
+          </div>
+
+          <!-- Sort + count (Fixable removed) -->
+          <div>
+            <label for="sortSelect" class="sr-only">Sort by</label>
+            <select id="sortSelect" class="select">
+              <option value="type">Type</option>
+              <option value="severity">Severity</option>
+            </select>
+            <span class="muted" id="issueCount"></span>
+          </div>
+        </div>
+
+        <div id="issuesList" class="issues-list"></div>
+      </section>
+
+      <!-- Help -->
+      <div id="help-prompt" class="card">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <path d="M12 17h.01"></path>
+        </svg>
+        What's this?
+        <span id="help-text" class="card">
+          Vertex A11y scans the current page for common accessibility issues
+          (alt text, contrast, keyboard access, structure, labels, captions,
+          zoom, etc.) and estimates a compliance score with quick fix tips.
+        </span>
+      </div>
+    </main>
+
+    <script src="popup.js"></script>
+    <script src="animations.bundle.js"></script>
+  </body>
 </html>

@@ -141,9 +141,9 @@ function renderScore(r) {
   scoreCard.innerHTML = `
     <div class="score">
       <div>
-        <div style="font-size:28px;font-weight:800">${Math.round(
+        <div id="score">${Math.round(
           r.score
-        )}%</div>
+        )}<span>%</span></div>
         <div class="muted">Estimated compliance</div>
       </div>
       <div class="badge-tier ${badgeClass}" aria-label="Tier">${tier}</div>
