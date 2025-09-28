@@ -1,109 +1,125 @@
 # Vertex A11y
 
-A Chrome extension that scans websites for accessibility violations and provides actionable recommendations to help developers build more inclusive web experiences.
+A premium Chrome extension that scans web pages for accessibility issues and provides actionable insights to help developers build more inclusive websites.
 
 ## The Problem
 
-Web accessibility remains a significant challenge in modern development:
+Web accessibility remains a critical challenge in modern web development. Studies show that **over 96% of websites fail to meet basic accessibility standards**, creating barriers for the millions of users who rely on assistive technologies. This widespread non-compliance excludes people with disabilities from accessing essential digital services, information, and opportunities.
 
-- **1.3 billion people** worldwide live with disabilities and depend on accessible websites
-- **96.3% of homepages** have detectable WCAG failures according to WebAIM's annual accessibility analysis
-- Accessibility testing often happens late in development, making fixes expensive and time-consuming
-- Existing tools either lack actionable guidance or require extensive accessibility knowledge to interpret
+Common accessibility issues include:
+- Missing alt text on images
+- Poor color contrast ratios
+- Lack of keyboard navigation support
+- Missing form labels
+- Improper semantic HTML structure
+- Inadequate focus management
 
 ## The Solution
 
-Vertex A11y provides instant, developer-friendly accessibility scanning with:
-
-- **Real-time violation detection** - Scans pages for ADA/WCAG compliance issues
-- **Visual highlighting** - Highlights problematic elements directly on the page
-- **Actionable recommendations** - Provides specific code fixes, not just problem descriptions
-- **Compliance scoring** - Estimates overall accessibility compliance with tiered ratings (A, AA, AAA)
-- **Comprehensive coverage** - Checks images, forms, keyboard navigation, color contrast, semantic structure, and more
+Vertex A11y provides developers with an intuitive, real-time accessibility scanning tool that identifies issues and offers concrete solutions. By integrating accessibility testing directly into the development workflow, we make it easier for teams to catch and fix problems before they reach production.
 
 ## Key Features
 
-### Automated Scanning
-- Image alt text validation
-- Color contrast analysis (WCAG AA/AAA standards)
-- Keyboard accessibility verification
-- Form label associations
-- Semantic HTML structure
-- Media caption requirements
-- Zoom/viewport configuration
+### 🔍 Comprehensive Scanning
+- **Image Accessibility**: Detects missing alt text and provides specific recommendations
+- **Color Contrast Analysis**: Analyzes text-background contrast ratios against WCAG guidelines
+- **Keyboard Navigation**: Identifies interactive elements that aren't keyboard accessible
+- **Semantic HTML**: Checks for proper landmark usage and heading hierarchy
+- **Form Accessibility**: Validates form controls have associated labels
+- **Media Captions**: Ensures videos include caption tracks
+- **Zoom Compatibility**: Detects viewport restrictions that prevent user scaling
 
-### Developer Experience
-- **Instant feedback** - No page reloads or external tools required
-- **Element highlighting** - Click "Reveal on page" to visually locate issues
-- **Code snippets** - Shows both problematic code and suggested fixes
-- **Issue filtering** - View all issues or focus on fixable ones
-- **Sorting options** - Organize by issue type or severity level
+### 📊 Smart Scoring System
+- **Compliance Estimation**: Provides percentage-based accessibility scores
+- **Tiered Assessment**: Categorizes sites as AAA, AA, A, or "Needs Work"
+- **Progress Tracking**: Shows passed vs. total checks with visual progress indicators
 
-### Visual Design
-- Modern, intuitive interface built with contemporary web technologies
-- Smooth animations and micro-interactions using Motion library
-- Dark theme optimized for developer workflows
-- Responsive design that works across different screen sizes
+### 🎯 Advanced Filtering
+- **Scope Filtering**: Toggle between "All Issues" and "Fixable Issues"
+- **Type Filtering**: Filter by issue category (Images, Contrast, Keyboard, etc.)
+- **Severity Filtering**: Prioritize by High, Medium, or Low severity issues
 
-## What Makes It Different
+### 🤖 AI-Powered Explanations
+- **Contextual Guidance**: Get detailed explanations of accessibility issues
+- **Fix Recommendations**: Receive step-by-step solutions with code examples
+- **Educational Support**: Learn accessibility best practices while you work
 
-Unlike existing accessibility tools, Vertex A11y focuses on:
-
-1. **Developer velocity** - Fixes are actionable code snippets, not abstract guidelines
-2. **Visual workflow integration** - Highlights elements directly in the browser context
-3. **Instant feedback loop** - No need to navigate between tools or upload sites for testing
-4. **Practical prioritization** - Clear severity levels help focus on high-impact issues first
-5. **Educational approach** - Each violation includes learning context, not just error detection
+### 🎨 Interactive Tools
+- **Element Highlighting**: Click "Reveal on page" to visually locate problematic elements
+- **PDF Export**: Generate comprehensive accessibility reports
+- **Real-time Updates**: See issue counts update dynamically as you scan
 
 ## Technologies Used
 
 ### Frontend
-- **Vanilla JavaScript** - Lightweight, no framework dependencies for content scripts
-- **Motion.js** - Smooth animations and micro-interactions in the popup UI
-- **Chrome Extension APIs** - Manifest V3 with proper content script isolation
+- **Vanilla JavaScript**: Core extension logic and DOM manipulation
+- **Motion API**: Smooth animations and micro-interactions for enhanced UX
+- **CSS3**: Modern styling with CSS custom properties, gradients, and backdrop filters
+- **Chrome Extensions API**: Seamless browser integration
 
-### Development Tools
-- **ESBuild** - Fast bundling and build optimization
-- **Chrome Extension Manifest V3** - Latest extension platform standards
+### Accessibility Engine
+- **Custom Scanner**: Purpose-built accessibility analyzer
+- **WCAG Compliance**: Implements Web Content Accessibility Guidelines 2.1
+- **Color Science**: Precise contrast ratio calculations using relative luminance
+- **DOM Analysis**: Comprehensive element inspection and path tracking
 
-### Accessibility Testing
-- **WCAG 2.1 Guidelines** - Implements Level A, AA, and AAA compliance checks
-- **Color contrast algorithms** - Proper luminance calculations following WCAG standards
-- **Semantic HTML validation** - Checks for proper landmark usage and heading structure
+### AI Integration
+- **OpenAI GPT-4**: Intelligent issue explanations and fix recommendations
+- **Contextual Analysis**: AI understands specific accessibility contexts
+- **Educational Content**: Generated guidance tailored to each issue type
 
-## 🌍 Impact
+### Architecture
+- **Content Scripts**: Secure page analysis without external dependencies
+- **Background Workers**: Handles AI API communication
+- **Popup Interface**: Responsive, accessible UI with ARIA compliance
+- **Message Passing**: Efficient communication between extension components
 
-| Stakeholder | Benefit | Description |
-|-------------|---------|-------------|
-| **👩‍💻 Developers** | **Faster iteration** | Catch accessibility issues during development, not after deployment |
-| | **Lower learning curve** | Provides specific solutions rather than requiring deep accessibility expertise |
-| | **Better code quality** | Encourages accessible-first development practices |
-| **♿ Users with Disabilities** | **Improved web experience** | Helps create websites that work for screen readers, keyboard navigation, and assistive technologies |
-| | **Better compliance** | Supports developers in meeting ADA and Section 508 requirements |
-| | **Inclusive design** | Promotes universal design principles that benefit all users |
-| **🏢 Organizations** | **Reduced legal risk** | Proactive accessibility compliance helps avoid ADA lawsuits |
-| | **Cost savings** | Earlier detection means cheaper fixes compared to post-deployment remediation |
-| | **Broader reach** | Accessible websites serve larger audiences and improve SEO |
+## Impact
 
-## Development
+### For Developers
+- **Faster Development**: Catch accessibility issues during development, not after deployment
+- **Learning Tool**: Understand accessibility principles through contextual guidance
+- **Compliance Confidence**: Meet WCAG standards with evidence-based scoring
+- **Workflow Integration**: Seamless testing without leaving the browser
 
-```bash
-# Install dependencies
-npm install
+### For Businesses
+- **Legal Compliance**: Reduce risk of ADA and Section 508 violations
+- **Market Expansion**: Reach the 1.3 billion people worldwide with disabilities
+- **SEO Benefits**: Accessible sites often rank better in search results
+- **Brand Reputation**: Demonstrate commitment to inclusive design
+- **Cost Savings**: Fix issues early rather than expensive post-launch remediation
 
-# Load extension in Chrome
-# 1. Open chrome://extensions/
-# 2. Enable "Developer mode"
-# 3. Click "Load unpacked" and select this directory
+### For Users with Disabilities
+- **Better Web Experience**: More sites become navigable with assistive technologies
+- **Equal Access**: Reduced barriers to digital services and information
+- **Independence**: Ability to use websites without requiring assistance
+
+## Installation
+
+1. Clone or download this repository
+2. Open Chrome and navigate to `chrome://extensions/`
+3. Enable "Developer mode" in the top right
+4. Click "Load unpacked" and select the extension directory
+5. The Vertex A11y icon will appear in your extensions toolbar
+
+## Usage
+
+1. Navigate to any webpage you want to analyze
+2. Click the Vertex A11y extension icon
+3. Click "Scan this Page" to run the accessibility analysis
+4. Review the compliance score and issue breakdown
+5. Use filters to focus on specific types of problems
+6. Click "Reveal on page" to locate problematic elements
+7. Use "Explain" for detailed guidance on fixing issues
+8. Export results to PDF for documentation or reporting
+
+## Configuration
+
+To enable AI-powered explanations:
+1. Create an `api_key.json` file in the extension directory
+2. Add your OpenAI API key:
+```json
+{
+  "OPENAI_API_KEY": "sk-your-api-key-here"
+}
 ```
-
-## Supported Accessibility Checks
-
-- ✅ **Images**: Alt text presence and quality
-- ✅ **Color Contrast**: WCAG AA/AAA compliance (4.5:1 / 7:1 ratios)
-- ✅ **Keyboard Navigation**: Focusable interactive elements
-- ✅ **Semantic HTML**: Proper landmark usage (main, nav, header, footer)
-- ✅ **Forms**: Label associations and accessibility
-- ✅ **Media**: Video caption requirements
-- ✅ **Viewport**: Zoom and scaling configuration
-- ✅ **Heading Structure**: Logical heading hierarchy
