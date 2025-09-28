@@ -2698,13 +2698,13 @@
   };
 
   // node_modules/motion-dom/dist/es/utils/resolve-elements.mjs
-  function resolveElements(elementOrSelector, scope, selectorCache) {
+  function resolveElements(elementOrSelector, scope2, selectorCache) {
     if (elementOrSelector instanceof EventTarget) {
       return [elementOrSelector];
     } else if (typeof elementOrSelector === "string") {
       let root = document;
-      if (scope) {
-        root = scope.current;
+      if (scope2) {
+        root = scope2.current;
       }
       const elements = selectorCache?.[elementOrSelector] ?? root.querySelectorAll(elementOrSelector);
       return elements ? Array.from(elements) : [];
@@ -3028,9 +3028,9 @@
   }
 
   // node_modules/framer-motion/dist/es/animation/animate/resolve-subjects.mjs
-  function resolveSubjects(subject, keyframes2, scope, selectorCache) {
+  function resolveSubjects(subject, keyframes2, scope2, selectorCache) {
     if (typeof subject === "string" && isDOMKeyframes(keyframes2)) {
-      return resolveElements(subject, scope, selectorCache);
+      return resolveElements(subject, scope2, selectorCache);
     } else if (subject instanceof NodeList) {
       return Array.from(subject);
     } else if (Array.isArray(subject)) {
@@ -3104,7 +3104,7 @@
   // node_modules/framer-motion/dist/es/animation/sequence/create.mjs
   var defaultSegmentEasing = "easeInOut";
   var MAX_REPEAT = 20;
-  function createAnimationsFromSequence(sequence, { defaultTransition = {}, ...sequenceTransition } = {}, scope, generators) {
+  function createAnimationsFromSequence(sequence, { defaultTransition = {}, ...sequenceTransition } = {}, scope2, generators) {
     const defaultDuration = defaultTransition.duration || 0.3;
     const animationDefinitions = /* @__PURE__ */ new Map();
     const sequences = /* @__PURE__ */ new Map();
@@ -3181,7 +3181,7 @@
         const subjectSequence = getSubjectSequence(subject, sequences);
         resolveValueSequence(keyframes2, transition, getValueSequence("default", subjectSequence));
       } else {
-        const subjects = resolveSubjects(subject, keyframes2, scope, elementCache);
+        const subjects = resolveSubjects(subject, keyframes2, scope2, elementCache);
         const numSubjects = subjects.length;
         for (let subjectIndex = 0; subjectIndex < numSubjects; subjectIndex++) {
           keyframes2 = keyframes2;
@@ -4409,12 +4409,12 @@
   function isSingleValue(subject, keyframes2) {
     return isMotionValue(subject) || typeof subject === "number" || typeof subject === "string" && !isDOMKeyframes(keyframes2);
   }
-  function animateSubject(subject, keyframes2, options, scope) {
+  function animateSubject(subject, keyframes2, options, scope2) {
     const animations = [];
     if (isSingleValue(subject, keyframes2)) {
       animations.push(animateSingleValue(subject, isDOMKeyframes(keyframes2) ? keyframes2.default || keyframes2 : keyframes2, options ? options.default || options : options));
     } else {
-      const subjects = resolveSubjects(subject, keyframes2, scope);
+      const subjects = resolveSubjects(subject, keyframes2, scope2);
       const numSubjects = subjects.length;
       invariant(Boolean(numSubjects), "No valid elements provided.", "no-valid-elements");
       for (let i = 0; i < numSubjects; i++) {
@@ -4436,9 +4436,9 @@
   }
 
   // node_modules/framer-motion/dist/es/animation/animate/sequence.mjs
-  function animateSequence(sequence, options, scope) {
+  function animateSequence(sequence, options, scope2) {
     const animations = [];
-    const animationDefinitions = createAnimationsFromSequence(sequence, options, scope, { spring });
+    const animationDefinitions = createAnimationsFromSequence(sequence, options, scope2, { spring });
     animationDefinitions.forEach(({ keyframes: keyframes2, transition }, subject) => {
       animations.push(...animateSubject(subject, keyframes2, transition));
     });
@@ -4449,27 +4449,27 @@
   function isSequence(value) {
     return Array.isArray(value) && value.some(Array.isArray);
   }
-  function createScopedAnimate(scope) {
+  function createScopedAnimate(scope2) {
     function scopedAnimate(subjectOrSequence, optionsOrKeyframes, options) {
       let animations = [];
       let animationOnComplete;
       if (isSequence(subjectOrSequence)) {
-        animations = animateSequence(subjectOrSequence, optionsOrKeyframes, scope);
+        animations = animateSequence(subjectOrSequence, optionsOrKeyframes, scope2);
       } else {
         const { onComplete, ...rest } = options || {};
         if (typeof onComplete === "function") {
           animationOnComplete = onComplete;
         }
-        animations = animateSubject(subjectOrSequence, optionsOrKeyframes, rest, scope);
+        animations = animateSubject(subjectOrSequence, optionsOrKeyframes, rest, scope2);
       }
       const animation = new GroupAnimationWithThen(animations);
       if (animationOnComplete) {
         animation.finished.then(animationOnComplete);
       }
-      if (scope) {
-        scope.animations.push(animation);
+      if (scope2) {
+        scope2.animations.push(animation);
         animation.finished.then(() => {
-          removeItem(scope.animations, animation);
+          removeItem(scope2.animations, animation);
         });
       }
       return animation;
@@ -4483,15 +4483,53 @@
   var scoreCard = document.getElementById("scoreCard");
   var issuesSection = document.getElementById("issuesSection");
   var issuesList = document.getElementById("issuesList");
-  var issueCount = document.getElementById("issueCount");
-  var sortSelect = document.getElementById("sortSelect");
-  var filterAllBtn = document.getElementById("filterAll");
-  var filterFixableBtn = document.getElementById("filterFixable");
-  var fixableCount = document.getElementById("fixableCount");
-  var report = null;
+  var issueCountNum = document.getElementById("issueCountNum");
+  var filterBtn = document.getElementById("filterBtn");
+  var filterBtnLabel = document.getElementById("filterBtnLabel");
+  var filterMenu = document.getElementById("filterMenu");
+  var tsBtn = document.getElementById("tsBtn");
+  var tsMenu = document.getElementById("tsMenu");
+  var typeList = document.getElementById("typeList");
+  var sevList = document.getElementById("sevList");
+  var exportBtn = document.getElementById("exportBtn");
   var lastReport = null;
-  var filterMode = "all";
+  var scope = "all";
+  var typeFilter = "";
+  var severityFilter = "";
   scanBtn.addEventListener("click", runScan);
+  filterBtn.addEventListener("click", () => toggleMenu(filterMenu, filterBtn));
+  filterMenu.addEventListener("click", (e) => {
+    const li = e.target.closest("li[data-value]");
+    if (!li) return;
+    scope = li.getAttribute("data-value");
+    for (const el of filterMenu.querySelectorAll("li"))
+      el.setAttribute("aria-selected", el === li ? "true" : "false");
+    filterBtnLabel.textContent = scope === "fixable" ? "Fixable" : "All";
+    refreshList();
+    closeMenu(filterMenu, filterBtn);
+  });
+  tsBtn.addEventListener("click", () => toggleMenu(tsMenu, tsBtn));
+  typeList.addEventListener("click", (e) => {
+    const li = e.target.closest("li[data-value]");
+    if (!li) return;
+    typeFilter = li.getAttribute("data-value");
+    markSelected(typeList, li);
+    refreshList();
+  });
+  sevList.addEventListener("click", (e) => {
+    const li = e.target.closest("li[data-value]");
+    if (!li) return;
+    severityFilter = li.getAttribute("data-value");
+    markSelected(sevList, li);
+    refreshList();
+  });
+  document.addEventListener("click", (e) => {
+    if (!filterBtn.contains(e.target) && !filterMenu.contains(e.target))
+      closeMenu(filterMenu, filterBtn);
+    if (!tsBtn.contains(e.target) && !tsMenu.contains(e.target))
+      closeMenu(tsMenu, tsBtn);
+  });
+  exportBtn.addEventListener("click", () => lastReport && exportPDF(lastReport));
   async function runScan() {
     scanBtn.disabled = true;
     scanBtn.textContent = "Scanning\u2026";
@@ -4501,11 +4539,9 @@
         currentWindow: true
       });
       if (!tab?.id) throw new Error("No active tab.");
-      if (!/^https?:\/\//i.test(tab.url || "")) {
-        throw new Error(
-          "This page type blocks extensions. Open a normal http(s) website and try again."
-        );
-      }
+      if (!/^https?:\/\//i.test(tab.url || ""))
+        throw new Error("Open a normal http(s) page and try again.");
+      let report;
       try {
         report = await chrome.tabs.sendMessage(tab.id, { type: "VERTEX_SCAN" });
         if (!report || report.error)
@@ -4519,13 +4555,13 @@
         if (!report || report.error)
           throw new Error(report?.error || "Scan failed after injection.");
       }
-      lastReport = report;
-      renderScore(report);
-      updateFixableCount(report.issues);
-      renderIssues(applyFiltersAndSort(report.issues));
-      animate(0, report.issues.length, {
+      lastReport = stampIds(report);
+      buildTypeMenu(lastReport.issues);
+      renderScore(lastReport);
+      refreshList();
+      animate(0, lastReport.issues.length, {
         duration: 1,
-        onUpdate: (latest) => issueCount.textContent = Math.round(latest)
+        onUpdate: (latest) => issueCountNum.textContent = Math.round(latest)
       });
     } catch (e) {
       renderError(e);
@@ -4534,64 +4570,108 @@
       scanBtn.innerHTML = `<span class="play">\u25B6</span> Scan this Page`;
     }
   }
-  filterAllBtn?.addEventListener("click", () => setFilter("all"));
-  filterFixableBtn?.addEventListener("click", () => setFilter("fixable"));
-  function setFilter(mode) {
-    filterMode = mode;
-    filterAllBtn.classList.toggle("chip--active", mode === "all");
-    filterAllBtn.setAttribute("aria-pressed", mode === "all");
-    filterFixableBtn.classList.toggle("chip--active", mode === "fixable");
-    filterFixableBtn.setAttribute("aria-pressed", mode === "fixable");
-    if (lastReport) renderIssues(applyFiltersAndSort(lastReport.issues));
-  }
-  function updateFixableCount(items) {
-    const n = items.filter((i) => i.fixable).length;
-    if (fixableCount) {
-      fixableCount.textContent = n;
-      const score = document.getElementById("score-num");
-      animate(0, n, {
-        duration: 1,
-        onUpdate: (latest) => fixableCount.textContent = Math.round(latest)
-      });
+  function toggleMenu(menu, btn) {
+    const open = !menu.classList.contains("open");
+    closeMenu(filterMenu, filterBtn);
+    closeMenu(tsMenu, tsBtn);
+    if (open) {
+      menu.classList.add("open");
+      btn.setAttribute("aria-expanded", "true");
     }
   }
-  function applyFiltersAndSort(items) {
-    let arr = [...items];
-    if (filterMode === "fixable") arr = arr.filter((i) => i.fixable);
-    const by = sortSelect?.value || "type";
-    if (by === "type")
-      arr.sort((a, b) => (a.type || "").localeCompare(b.type || ""));
-    if (by === "severity")
-      arr.sort((a, b) => severityRank(b.severity) - severityRank(a.severity));
-    return arr;
+  function closeMenu(menu, btn) {
+    menu.classList.remove("open");
+    btn.setAttribute("aria-expanded", "false");
   }
-  sortSelect?.addEventListener("change", () => {
+  function markSelected(list, li) {
+    for (const el of list.querySelectorAll("li"))
+      el.setAttribute("aria-selected", el === li ? "true" : "false");
+  }
+  function buildTypeMenu(items) {
+    const set = /* @__PURE__ */ new Set();
+    for (const it of items) {
+      const t = (it.type || "").trim();
+      if (t) set.add(t);
+    }
+    const sorted = Array.from(set).sort(
+      (a, b) => a.localeCompare(b, "en", { sensitivity: "base" })
+    );
+    typeList.innerHTML = `<li role="option" data-value="" aria-selected="${typeFilter === ""}"><span class="radio"></span>Any</li>` + sorted.map(
+      (t) => `<li role="option" data-value="${escapeAttr(t)}" aria-selected="${typeFilter.toLowerCase() === t.toLowerCase()}"><span class="radio"></span>${escapeHTML(t)}</li>`
+    ).join("");
+  }
+  function refreshList() {
     if (!lastReport) return;
-    renderIssues(applyFiltersAndSort(lastReport.issues));
-  });
-  function severityRank(s) {
-    return s === "high" ? 3 : s === "medium" ? 2 : 1;
+    const filtered = applyFilters(lastReport.issues);
+    renderIssues(filtered);
+  }
+  function applyFilters(items) {
+    let out = items;
+    if (scope === "fixable") out = out.filter((i) => i.fixable);
+    if (typeFilter)
+      out = out.filter(
+        (i) => (i.type || "").toLowerCase() === typeFilter.toLowerCase()
+      );
+    if (severityFilter)
+      out = out.filter(
+        (i) => (i.severity || "").toLowerCase() === severityFilter.toLowerCase()
+      );
+    return out;
   }
   issuesList.addEventListener("click", async (e) => {
-    const btn = e.target.closest("[data-action='reveal']");
+    const btn = e.target.closest("button[data-action]");
     if (!btn) return;
-    const path = btn.getAttribute("data-path") || null;
-    try {
-      const [tab] = await chrome.tabs.query({
-        active: true,
-        currentWindow: true
-      });
-      if (!tab?.id) throw new Error("No active tab.");
-      if (!/^https?:\/\//i.test(tab.url || ""))
-        throw new Error("Action blocked on this page.");
-      await chrome.tabs.sendMessage(tab.id, { type: "VERTEX_HIGHLIGHT", path });
-    } catch (err) {
-      renderError(err);
+    const action = btn.getAttribute("data-action");
+    const id = btn.getAttribute("data-id");
+    const issue = lastReport?.issues?.find((i) => i.id === id);
+    if (!issue) return;
+    if (action === "reveal") {
+      try {
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          currentWindow: true
+        });
+        if (!tab?.id) throw new Error("No active tab.");
+        if (!/^https?:\/\//i.test(tab.url || ""))
+          throw new Error("Action blocked on this page.");
+        await chrome.tabs.sendMessage(tab.id, {
+          type: "VERTEX_HIGHLIGHT",
+          path: issue.path || null
+        });
+      } catch (err) {
+        renderError(err);
+      }
+      return;
+    }
+    if (action === "ai-explain") {
+      btn.disabled = true;
+      btn.textContent = "Explaining\u2026";
+      try {
+        const res = await chrome.runtime.sendMessage({
+          type: "AI_EXPLAIN",
+          item: issue
+        });
+        if (!res?.ok) throw new Error(res?.error || "AI failed.");
+        issue.explain = res.details || "";
+        const card = btn.closest(".issue");
+        if (card) {
+          const exp = card.querySelector(".explain-slot");
+          if (exp) exp.innerHTML = renderExplainHTML(issue.explain);
+        } else {
+          refreshList();
+        }
+      } catch (err) {
+        renderError(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Explain";
+      }
     }
   });
   function renderScore(r) {
-    const tier = r.score >= 95 ? "AAA" : r.score >= 85 ? "AA" : r.score >= 70 ? "A" : "Needs Work";
-    const badgeClass = r.score >= 95 ? "badge-aaa" : r.score >= 85 ? "badge-aa" : r.score >= 70 ? "badge-a" : "badge-needs-work";
+    const pct = Math.round(r.score);
+    const tier = pct >= 95 ? "AAA" : pct >= 85 ? "AA" : pct >= 70 ? "A" : "Needs Work";
+    const badgeClass = pct >= 90 ? "badge-aaa" : pct >= 85 ? "badge-aa" : pct >= 70 ? "badge-a" : "badge-needs-work";
     scoreCard.classList.remove("hidden");
     scoreCard.innerHTML = `
     <div class="score">
@@ -4621,7 +4701,6 @@
   }
   function renderIssues(items) {
     issuesList.innerHTML = "";
-    issueCount.textContent = `${items.length}`;
     for (const it of items) {
       const el = document.createElement("div");
       el.className = "issue";
@@ -4636,9 +4715,9 @@
       el.innerHTML = `
       <div class="head">
         <div class="type">${escapeHTML(it.type || "Issue")}</div>
-        <div class="sev ${escapeHTML(it.severity || "low")}">${escapeHTML(
-        it.severity || "low"
-      )}</div>
+        <div class="sev ${escapeHTML(
+        (it.severity || "low").toLowerCase()
+      )}">${escapeHTML(it.severity || "low")}</div>
       </div>
       <div class="muted" style="margin-top:4px">${escapeHTML(
         it.message || ""
@@ -4649,13 +4728,17 @@
       )}</div>` : ""}
       ${previewHTML}
       <div class="actions">
-        <button class="btn" data-action="reveal" data-path="${escapeAttr(
-        it.path || ""
-      )}">Reveal on page</button>
+        <button class="btn" data-action="reveal" data-id="${it.id}">Reveal on page</button>
+        <button class="btn ghost" data-action="ai-explain" data-id="${it.id}">Explain</button>
       </div>
+      <div class="explain-slot" style="margin-top:8px"></div>
     `;
       issuesList.appendChild(el);
     }
+  }
+  function renderExplainHTML(md) {
+    const safe = escapeHTML(md).replace(/^-\s+/gm, "\u2022 ").replace(/\n/g, "<br>");
+    return `<div class="muted" style="margin-top:6px">${safe}</div>`;
   }
   function renderError(err) {
     scoreCard.classList.remove("hidden");
@@ -4665,6 +4748,68 @@
       err?.message || "Something went wrong."
     )}</div>
   `;
+  }
+  function exportPDF(report) {
+    const items = applyFilters(report.issues);
+    const now2 = (/* @__PURE__ */ new Date()).toLocaleString();
+    const style = `
+  <style>
+    body{font:14px/1.5 -apple-system,Segoe UI,Inter,Roboto,Arial;padding:24px;color:#111}
+    h1{margin:0 0 6px;font-size:22px}
+    .muted{color:#555}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;margin-left:8px}
+    .a{background:#222;color:#fff}.aa{background:#0e7a4f;color:#eafff2}.aaa{background:#09522e;color:#caffdb}
+    .issue{border:1px solid #ddd;border-radius:10px;padding:12px;margin:10px 0}
+    .head{display:flex;justify-content:space-between;align-items:center}
+    .sev{font-weight:700;text-transform:uppercase;font-size:11px}
+    .sev.high{color:#c0392b}.sev.medium{color:#d35400}.sev.low{color:#2e8b57}
+    pre{background:#f6f7f9;border:1px solid #e2e5ea;border-radius:8px;padding:8px;overflow:auto}
+    img{max-width:100%;border-radius:8px}
+    .preview{border:1px solid #eee;border-radius:10px;padding:6px;margin-top:8px}
+    @media print {.no-print{display:none}}
+  </style>`;
+    const pct = Math.round(report.score);
+    const tier = pct >= 90 ? "AAA" : pct >= 50 ? "AA" : pct >= 30 ? "A" : "Needs Work";
+    const tierClass = pct >= 90 ? "aaa" : pct >= 50 ? "aa" : "a";
+    const issueHTML = items.map((it) => {
+      const imgSrc = (it.type || "").toLowerCase() === "images" ? extractSrc(it.snippet) || extractSrc(it.tip) : "";
+      return `
+      <div class="issue">
+        <div class="head">
+          <div><strong>${escapeHTML(it.type || "Issue")}</strong></div>
+          <div class="sev ${escapeHTML(
+        (it.severity || "low").toLowerCase()
+      )}">${escapeHTML(it.severity || "low")}</div>
+        </div>
+        <div class="muted">${escapeHTML(it.message || "")}</div>
+        ${it.snippet ? `<pre>${escapeHTML(it.snippet)}</pre>` : ""}
+        ${it.tip ? `<div><strong>Fix:</strong> ${escapeHTML(it.tip)}</div>` : ""}
+        ${imgSrc ? `<div class="preview"><img src="${escapeAttr(
+        imgSrc
+      )}" alt=""></div>` : ""}
+        ${it.explain ? `<div class="muted" style="margin-top:6px">${escapeHTML(
+        it.explain
+      ).replace(/^-\s+/gm, "\u2022 ").replace(/\n/g, "<br>")}</div>` : ""}
+      </div>`;
+    }).join("");
+    const html = `
+  <!doctype html><html><head><meta charset="utf-8">${style}</head>
+  <body>
+    <div class="no-print" style="text-align:right"><button onclick="window.print()">Print / Save PDF</button></div>
+    <h1>Vertex A11y report <span class="badge ${tierClass}">${tier}</span></h1>
+    <div class="muted">Generated: ${escapeHTML(now2)}</div>
+    <p><strong>${pct}%</strong> compliance \u2014 ${report.passed}/${report.checked} checks passed \u2014 ${items.length} issues (current view)</p>
+    ${issueHTML}
+    <script>window.print()<\/script>
+  </body></html>`;
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    chrome.tabs.create({ url });
+  }
+  function stampIds(r) {
+    let i = 0;
+    for (const it of r.issues) if (!it.id) it.id = `i${++i}`;
+    return r;
   }
   function escapeHTML(s) {
     return String(s).replace(

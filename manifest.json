@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Vertex A11y",
   "description": "Scan the current page for common ADA/WCAG issues and compute a compliance score.",
-  "version": "0.1.0",
+  "version": "0.3.0",
 
   "icons": {
     "16": "icons/icon16.png",
@@ -21,7 +21,13 @@
   },
 
   "permissions": ["activeTab", "scripting", "storage"],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "<all_urls>",
+    "https://api.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -30,4 +36,3 @@
     }
   ]
 }
-

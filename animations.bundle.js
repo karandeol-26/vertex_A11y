@@ -4714,9 +4714,6 @@
   var helpGroup = document.getElementById("help-group");
   var helpPrompt = document.getElementById("help-prompt");
   var helpText = document.getElementById("help-text");
-  var mouseOffSeq = [
-    [][helpGroup, { scaleY: 1, fontSize: "18px", duration: 0.5 }]
-  ];
   hover(helpGroup, (helpPrompt2) => {
     animate(helpPrompt2, { color: "#676767ff" }, { duration: 0.2 });
     animate(helpText, { opacity: 1, duration: 0.2 });

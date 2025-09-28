@@ -82,14 +82,6 @@ const helpGroup = document.getElementById("help-group");
 const helpPrompt = document.getElementById("help-prompt");
 const helpText = document.getElementById("help-text");
 
-const mouseOverSeq = [
-  [helpGroup, { scaleY: 1.5, fontSize: "12px", duration: 0.5 }],
-];
-
-const mouseOffSeq = [
-  [][(helpGroup, { scaleY: 1, fontSize: "18px", duration: 0.5 })],
-];
-
 hover(helpGroup, (helpPrompt) => {
   animate(helpPrompt, { color: "#676767ff" }, { duration: 0.2 });
   animate(helpText, { opacity: 1, duration: 0.2 });
