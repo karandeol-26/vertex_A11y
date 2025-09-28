@@ -4670,8 +4670,8 @@
   });
   function renderScore(r) {
     const pct = Math.round(r.score);
-    const tier = pct >= 95 ? "AAA" : pct >= 85 ? "AA" : pct >= 70 ? "A" : "Needs Work";
-    const badgeClass = pct >= 90 ? "badge-aaa" : pct >= 85 ? "badge-aa" : pct >= 70 ? "badge-a" : "badge-needs-work";
+    const tier = pct >= 90 ? "AAA" : pct >= 80 ? "AA" : pct >= 70 ? "A" : "Needs Work";
+    const badgeClass = tier == "AAA" ? "badge-aaa" : tier == "AA" ? "badge-aa" : tier == "A" ? "badge-a" : "badge-needs-work";
     scoreCard.classList.remove("hidden");
     scoreCard.innerHTML = `
     <div class="score">
@@ -4683,9 +4683,16 @@
       </div>
       <div class="badge-tier ${badgeClass}" aria-label="Tier">${tier}</div>
     </div>
-    <div class="muted" style="margin-top:6px">
-      <span id="passed-num"> ${r.passed} </span>
-      <span>/${r.checked} checks passed</span>
+    <div id="pass-ratio" class="muted">
+      <div>
+        <span id="passed-num">${r.passed}</span>
+        <span>/ ${r.checked} checks passed</span>
+      </div>
+      <div id="progress-bar-container">
+        <div id="progress-background" class="progress-bar"></div>
+        <div id="progress-foreground" class="progress-bar"</div>
+    </div>
+      
     </div>`;
     issuesSection.classList.remove("hidden");
     const score = document.getElementById("score-num");
@@ -4698,6 +4705,18 @@
       duration: 1,
       onUpdate: (latest) => passedNum.innerHTML = Math.round(latest)
     });
+    const progressBar = document.getElementById("progress-foreground");
+    const backgroundColor = tier == "AAA" ? "#40e014ff" : tier == "AA" ? "#31d07f" : tier == "A" ? "#ffb347" : "#ff6b6b";
+    animate(
+      progressBar,
+      {
+        scaleX: [0, r.score * 0.01],
+        backgroundColor: ["#1c1d20", backgroundColor],
+        ease: "linear",
+        duration: 1
+      },
+      { type: "spring", bounce: 0 }
+    );
   }
   function renderIssues(items) {
     issuesList.innerHTML = "";

@@ -124,13 +124,13 @@ main {
   position: absolute;
   left: 50%;
   transform: translate(-50%, 8px);
-  bottom: -34px;
-  min-width: 220px;
+  bottom: -44px;
+  min-width: 60px;
   max-width: 360px;
   background: #111319;
   border: 1px solid #2a2d37;
   color: #e7e9f2;
-  padding: 8px 10px;
+  padding: 8px 8px;
   border-radius: 10px;
   font-size: 12px;
   line-height: 1.35;
@@ -318,6 +318,7 @@ main {
   border-radius: 14px;
   padding: 12px;
   background: #0c0d11;
+  overflow-wrap: break-word;
 }
 .issue .head {
   display: flex;
@@ -455,6 +456,41 @@ main {
   right: 20px;
   pointer-events: none;
   opacity: 0;
+}
+
+.progress-bar {
+  position: relative;
+  border-radius: 15px;
+  border-width: 1px;
+  border-style: solid;
+  width: 150px;
+  height: 7px;
+}
+
+#progress-bar-container{
+  position: relative;
+}
+
+#progress-foreground{
+  position: absolute;
+  bottom: 10%;
+  background-color: var(--ok);
+  border-color: var(--edge);
+  transform-origin: bottom left;
+  z-index: 1;
+}
+
+#progress-background {
+  position: relative;
+  background-color: var(--edge);
+  border-color: var(--edge);
+}
+
+#pass-ratio {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* motion */

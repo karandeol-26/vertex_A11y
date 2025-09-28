@@ -21,11 +21,34 @@ hover(scanBtn, (element) => {
   animate(0, 10, {
     duration: 0.2,
     onUpdate: (latest) => {
-      filter = Math.round(latest);
+      let filter = Math.round(latest);
       document.querySelector(
         ".border-background"
       ).style.filter = `blur(${filter}px)`;
     },
+  });
+
+  animate(0, 360, {
+    duration: 0.4,
+    ease: easeOut,
+    onUpdate: (latest) => {
+      let degree = Math.round(latest);
+      document.querySelector(
+        ".border-background"
+      ).style.background = `conic-gradient(from ${degree}deg, red, orange, yellow, green, blue, purple)`;
+    },
+  }).finished.then(() => {
+    animate(0, 360, {
+      duration: 6,
+      repeat: Infinity,
+      ease: "linear",
+      onUpdate: (latest) => {
+        let degree = Math.round(latest);
+        document.querySelector(
+          ".border-background"
+        ).style.background = `conic-gradient(from ${degree}deg, red, orange, yellow, green, blue, purple)`;
+      },
+    });
   });
 
   return () => {
@@ -33,17 +56,17 @@ hover(scanBtn, (element) => {
       scale: 1,
       backgroundColor: "#fff",
       color: "#000",
-      duration: 0.2,
+      duration: 0.4,
     });
 
     animate(".border-background", {
       scale: 1,
       inset: "0px",
-      duration: 0.2,
+      duration: 0.4,
     });
 
     animate(10, 0, {
-      duration: 0.2,
+      duration: 0.4,
       onUpdate: (latest) => {
         filter = Math.round(latest);
         document.querySelector(
@@ -51,6 +74,17 @@ hover(scanBtn, (element) => {
         ).style.filter = `blur(${filter}px)`;
       },
     });
+
+    animate(360, 0, {
+    duration: 0.4,
+    ease: easeOut,
+    onUpdate: (latest) => {
+      let degree = Math.round(latest);
+      document.querySelector(
+        ".border-background"
+      ).style.background = `conic-gradient(from ${degree}deg, red, orange, yellow, green, blue, purple)`;
+    },
+  })
   };
 });
 

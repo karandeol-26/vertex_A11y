@@ -38,10 +38,6 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg?.type !== "AI_EXPLAIN") return;
 
     if (!AI_KEY || !AI_KEY.startsWith("sk-")) {
-      sendResponse({
-        ok: false,
-        error: "AI key not configured in background.js.",
-      });
       return;
     }
 
